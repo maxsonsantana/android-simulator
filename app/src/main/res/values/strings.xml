@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MaxCorporation</string>
+    <string name="txt_simulate">Match simulator Button</string>
 </resources>
