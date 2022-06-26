@@ -1,4 +1,4 @@
-package maxson.com.br.maxbegin;
+package maxson.com.br.maxbegin.ui;
 
 import android.os.Bundle;
 
@@ -17,5 +17,22 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setupMatchesList();
+        setupMatchesRefresh();
+        setupFloatActionButton();
     }
+
+    private void setupMatchesList(){
+        //TODO: Listar as partidas, consumindo nossa API.
+    }
+
+    private void setupMatchesRefresh(){
+        //TODO: Atualizar as partidas na ação Swipe
+    }
+
+    private void setupFloatActionButton(){
+        //TODO:  Criar evento de click e simulação de partidas.
+    }
+
 }
