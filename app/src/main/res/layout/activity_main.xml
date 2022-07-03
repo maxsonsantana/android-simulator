@@ -31,9 +31,9 @@
         android:id="@+id/rvMatches"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="82dp"
-        tools:layout_editor_absoluteY="-221dp"
-        tools:listitem="@layout/match_item"
-        tools:itemCount="3"/>
+        tools:itemCount="3"
+        tools:layout_editor_absoluteX="26dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:listitem="@layout/match_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

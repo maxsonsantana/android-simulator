@@ -1,10 +1,13 @@
 package maxson.com.br.maxbegin.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -14,6 +17,7 @@ import maxson.com.br.maxbegin.R;
 import maxson.com.br.maxbegin.data.MatchesAPI;
 import maxson.com.br.maxbegin.databinding.ActivityMainBinding;
 import maxson.com.br.maxbegin.domain.Match;
+import maxson.com.br.maxbegin.ui.adapter.MatchesAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private MatchesAPI matchesAPI;
+    private RecyclerView.Adapter matchesAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,30 +52,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupMatchesList(){
+        binding.rvMatches.setHasFixedSize(true);
+        binding.rvMatches.setLayoutManager(new LinearLayoutManager(this));
+        findMatchesFromApi();
+    }
+
+    private void setupMatchesRefresh(){
+       binding.srlMatches.setOnRefreshListener(this::findMatchesFromApi);
+    }
+
+    private void setupFloatActionButton(){
+        binding.fabSimulate.setOnClickListener(view -> {
+            view.animate().rotationBy(360).setDuration(500).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                   //TODO: Algoritmo de simulação de partidas
+                }
+            });
+        });
+    }
+
+    private void findMatchesFromApi() {
+        binding.srlMatches.setRefreshing(true);
         matchesAPI.getMatches().enqueue(new Callback<List<Match>>() {
             @Override
             public void onResponse(Call<List<Match>> call, Response<List<Match>> response) {
                 if(response.isSuccessful()){
                     List<Match> matches = response.body();
-                    Log.i( "SIMULATOR", "Deu bom nas partidas!! Quantidade: "+matches.size());
+                    matchesAdapter = new MatchesAdapter(matches);
+                    binding.rvMatches.setAdapter(matchesAdapter);
+
                 }else{
                     showErrorMessage();
                 }
+                binding.srlMatches.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<Match>> call, Throwable t) {
-
+                showErrorMessage();
+                binding.srlMatches.setRefreshing(false);
             }
         });
-    }
-
-    private void setupMatchesRefresh(){
-        //TODO: Atualizar as partidas na ação Swipe
-    }
-
-    private void setupFloatActionButton(){
-        //TODO:  Criar evento de click e simulação de partidas.
     }
 
     private void showErrorMessage() {
